@@ -12,7 +12,7 @@ CXXFLAGS= -W -Wall -Wextra
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(OBJ) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
 clean:
 	rm -rf $(OBJ)
@@ -21,3 +21,4 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+
