@@ -3,25 +3,31 @@
 
 Core::Core()
 {
+  _white.setType(HUMAN);
+  _black.setType(AI_PLAYER);
+  _white.setColor(WHITE);
+  _black.setColor(BLACK);
 }
 
 void Core::exec()
 {
-  bool loop(true);
+  Hit hit;
+  Player *player(&_white);
 
-  while (loop)
+  while (!_referee.isEnd())
     {
-      this->clear();
-      this->show();
+      _gui.clear();
+      _gui.show();
+      
+      do
+	{
+	  if (player.getType() == HUMAN)
+	    _gui.play(player.getColor(), hit);
+	  else
+	    player.play(hit);
+      	}
+      while (_referee.checkHit(hit) == false);
+
+      
     }
-}
-
-
-void Core::clear()
-{
-  system("clear");
-}
-
-void Core::show()
-{
 }

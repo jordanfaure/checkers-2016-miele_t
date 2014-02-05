@@ -13,8 +13,6 @@ public:
   Core();
 
   void exec();
-  void clear();
-  void show();
 private:
   Gui _gui;
   Referee _referee;

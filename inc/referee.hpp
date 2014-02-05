@@ -12,6 +12,7 @@ public:
   bool isEnd();
   bool checkHit(const Hit & hit);
   void updateBoard(const Hit & hit);
+  PlayerColor getCaseColor(unsigned int line, unsigned int column);
 private:
   bool _loop;
   char _board[BOARD_SIZE][BOARD_SIZE];

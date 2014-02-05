@@ -6,7 +6,7 @@
 
 enum PlayerType {HUMAN, AI_PLAYER};
 
-enum PlayerColor {BLACK, WHITE};
+enum PlayerColor {NO_COLOR, BLACK, WHITE};
 
 struct Hit
 {
