@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <title>CheckersJS</title>
-    
+
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.css" />
-  </head>
-  <body>
-    
-    <header class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
-	<div class="navbar-header">
-	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-	  </button>
-	  <a class="navbar-brand" href="/">CheckersJS</a>
-	</div>
-	<div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#">GitHub</a></li>
-          </ul>
-	</div>
-      </div>
-    </header>
-    
-    <div class="container jumbotron" style="border-radius: 10px;">
+    <link rel="stylesheet" href="css/checkers.css" />
+</head>
+<body>
+
+<header class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CheckersJS</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#">GitHub</a></li>
+            </ul>
+        </div>
     </div>
+</header>
+
+<div class="container">
+    <div ng-app="CheckersApp">
+    <table class="board"><% for(var line=0; line < board_size; line++) { %>
+        <tr class="board-line"><% for (var column = 0; column < board_size; column++) { %>
+            <td class="board-column">
+                <button class="board-stone" data-line="<%= line %>>" data-column="<%= column %>">
+                    [<%= line %>,<%= column %>]
+                </button>
+            </td><% } %>
+        </tr><% } %>
+    </table>
+    </div>
+</div>
     
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/angular.min.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-  </body>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="ng/app.js"></script>
+</body>
 </html>
