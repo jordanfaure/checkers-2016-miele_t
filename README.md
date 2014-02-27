@@ -1,4 +1,7 @@
 checkers-2016-miele_t
 =====================
 
-jeu de dames, IA
+Checkers / Draughts games with AI player with AngularJS and nodeJS
+
+
+
