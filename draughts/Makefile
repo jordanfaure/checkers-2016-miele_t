@@ -6,11 +6,13 @@
 #                                                                              #
 ################################################################################
 
+ARCH = WIN
+
 NAME = a.out
 
-ML = main.ml
+ML= main.ml
 
-MLI = assistants.mli
+MLI = 
 
 CMI = $(MLI:.mli=.cmi)
 CMO = $(ML:.ml=.cmo)
@@ -22,9 +24,16 @@ OCAMLC = ocamlc $(CAMLFLAGS)
 OCAMLOPT = ocamlopt $(CAMLFLAGS)
 OCAMLDOC = ocamldoc -html -d $(ROOT)/doc
 
-all: .depend $(CMI) $(NAME)
+## utils
+ifeq ($(ARCH), WIN)
+	RM = del /F
+else
+	RM = rm -f
+endif
 
 byte: .depend $(CMI) $(NAME).byte
+
+all: .depend $(CMI) $(NAME)
 
 $(NAME): $(CMX)
 	@$(OCAMLOPT) -o $@ $(CMX)
@@ -53,15 +62,15 @@ documentation: $(CMI)
 re: fclean all
 
 clean:
-	@/bin/rm -f *.cm* *.o .depend *~
+	@$(RM) *.cm* *.o .depend *~
 	@echo "[OK] clean"
 
 fclean: clean
-	@/bin/rm -f $(NAME) $(NAME).byte
+	@$(RM) $(NAME) $(NAME).byte
 	@echo "[OK] fclean"
 
 .depend:
-	@/bin/rm -f .depend
+	@$(RM) .depend
 	@$(OCAMLDPE) $(MLI) $(ML) > .depend
 	@echo "[OK] dependencies"
 
