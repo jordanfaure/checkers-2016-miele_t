@@ -6,11 +6,13 @@ class Player:
     """Base class for Human and AI player
     mode : Human | Ai
     color : Black | White"""
-    def __init__(self, color, mode=commons.Human, ihm=None, ai=None):
+    def __init__(self, color, mode=commons.Human, ihm=None, ai=None, board=None):
         self.ihm = ihm
         self.ai = ai
         self.mode = mode
         self.color = color
+        self.board = board
+
     def think(self):
         if self.mode == commons.Human and self.ihm != None:
             return self.ihm.think(self.color)
@@ -18,19 +20,10 @@ class Player:
             return self.ai.think()
         else:
             print("Player error: Bad init !")
-    def updateBoard(self, entry):
-        if self.mode == commons.CPU:
-            if self.ai == None:
-                raise Exception("Player.updateBoard error: bad AI config")
-            else:
-                self.ai.updateBoard(entry)
 
 class AI(Player):
     """AI added to Player by composition"""
     def __init__(self):
-        self.board = None
-
-    def updateBoard(self, entry):
         pass
 
     def think(self):

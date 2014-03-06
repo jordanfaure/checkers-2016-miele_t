@@ -4,15 +4,15 @@ import commons
 
 class Referee:
     """Referee : implementation of International Checkers / Draughts rules"""
-    def __init__(self, ihm, black, white):
+    def __init__(self, ihm, black, white, board):
         self.game_is_over = False
         self.ihm = ihm
         self.black = black
         self.white = white
+        self.board = board
         self.color = commons.White
 
     def checkHit(self, hit):
-        # hit | False -> BadHit | True -> GoodHit
         if hit == commons.Hit.Bad:
             return False
         elif hit == commons.Hit.Quit:
@@ -22,7 +22,16 @@ class Referee:
             ## Well formatted entry -> update board
             if commons.Hit.isFormat(hit):
                 # well formated -> check is legal
-                return False
+                (s_c, s_l, e_c, e_l) = commons.Hit.explode(hit)
+
+                # Fill end Cell Infos :cell -> Fill and stone exist
+                self.board.board[s_l][s_c].fill()
+                self.board.board[e_l][e_c].stone.color = self.board.board[s_l][s_c].stone.color
+                self.board.board[e_l][e_c].stone.state = self.board.board[s_l][s_c].stone.state
+                self.board.board[e_l][e_c].stone.is_exist = self.board.board[s_l][s_c].stone.is_exist
+                # Clean start Cell Infos
+                self.board.board[s_l][s_c].clean()
+                return True
             else:
                 return False
 

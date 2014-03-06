@@ -5,14 +5,20 @@ import re
 
 """Define Color enum and Type enum"""
 
+Ether = "Ether"
 Black = "Black"
 White = "White"
 
 Human = "Human"
 CPU = "CPU"
 
+# Stone State enum
 Pawn = "Pawn"
-Queen = "Queen"
+Lady = "Lady"
+
+# Cell of Board State
+Empty = "Empty"
+Fill = "Fill"
 
 class Hit:
     """Class for separate entry from user to internal logic"""

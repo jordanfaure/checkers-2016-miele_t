@@ -8,10 +8,11 @@ import platform
 import os
 
 import commons
+import board
 
 class IHM:
-    def __init__(self):
-        self.bussy = "bussy"
+    def __init__(self, board):
+        self.board = board
 
     def clear(self):
         arch = platform.system()
@@ -21,9 +22,9 @@ class IHM:
             os.system("clear")
 
     def display(self):
-        print("Board")
+        self.board.display()
 
-    def convertHit(entry):
+    def convertHit(self, entry):
         """Capitalize input str and convert into commons.Hit
         Test only Clear and Quit commands
         Leave check format at Referee"""
@@ -34,9 +35,10 @@ class IHM:
         elif hit == commons.Hit.Quit:
             hit = commons.Hit.Quit
         else:
-            return hit
+            hit = hit.lower()
+        return hit
     
-    def think(self, color=""):
+    def think(self, color):
         try:
             hit = input(color + " # ")
         except KeyboardInterrupt:
