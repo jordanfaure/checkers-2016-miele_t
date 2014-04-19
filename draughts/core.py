@@ -5,8 +5,8 @@ import commons, ihm, player, referee, board
 def launch():
     Board = board.Board()
     Ihm = ihm.IHM(Board)
-    white_player = player.Player(commons.White, commons.Human, Ihm, Board)
-    black_player = player.Player(commons.Black, commons.Human, Ihm, Board)
+    white_player = player.Player(color=commons.White, mode=commons.Human, ihm=Ihm, board=Board)
+    black_player = player.Player(color=commons.Black, mode=commons.Human, ihm=Ihm, board=Board)
     Referee = referee.Referee(Ihm, black_player, white_player, Board)
     Referee.launch()
 

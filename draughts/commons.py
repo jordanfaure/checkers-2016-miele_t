@@ -32,9 +32,12 @@ class Hit:
             return True
         else:
             return False
-    def explode(entry):
+    def explode(entry, pair=False):
         """"""
         if Hit.Pattern.match(entry) != None:
-            return (entry[0], entry[1], entry[2], entry[3])
+            if pair:
+                return (entry[0], entry[1]), (entry[2], entry[3])
+            else:
+                return (entry[0], entry[1], entry[2], entry[3])
         else:
             raise ("Hit.explode error: Hit Pattern match error !")

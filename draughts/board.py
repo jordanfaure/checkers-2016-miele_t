@@ -21,6 +21,28 @@ def from_board_to_index(line, column):
             break
     return (line_index, column_index)
 
+def from_index_to_board(line, column, pair=False):
+    line_idx = 0
+    column_idx = 0
+    line_char = ""
+    column_char = ""
+    for it in BOARD_LINES:
+        if line_idx == line:
+            line_char = it
+            break
+        else:
+            line_idx += 1
+    for it in BOARD_COLUMNS:
+        if column_idx == column:
+            column_char = it
+            break
+        else:
+            column_idx += 1
+    if pair:
+        return (column_char + line_char)
+    else:
+        return (column_char, line_char)    
+
 class Stone:
     def __init__(self, color=commons.Ether, state=commons.Pawn, is_exist=False):
         self.color = color
@@ -87,7 +109,6 @@ class Cell:
             stone = False
         return (color, state, stone)
 
-
 ################################################################################
 
 class Board:
@@ -124,3 +145,51 @@ class Board:
             for column in BOARD_COLUMNS:
                 print(" " + str(self.board[line][column]) + " ", end="")
             print("")
+
+    def action_is_move(self, hit, stone, color):
+        (start, end) = commons.Hit.explode(hit, pair=True)
+        (sl_idx, sc_idx) = from_board_to_index(start[1], start[0])
+        (el_idx, ec_idx) = from_board_to_index(end[1], end[0])
+
+        if stone == commons.Pawn:
+            if color == commons.Black:
+                if el_idx == sl_idx + 1 and (ec_idx == sc_idx + 1 or ec_idx == sc_idx - 1):
+                    return True
+            elif color == commons.White:
+                if el_idx == sl_idx - 1 and (ec_idx == sc_idx + 1 or ec_idx == sc_idx - 1):
+                    return True
+            else:
+                raise Exception("board.action_is_move : color value error")
+        elif stone == commons.Lady:
+            if color == commons.Black or color == commons.White:
+                if (el_idx == sl_idx - 1 or el_idx == sl_idx + 1) and (ec_idx == sc_idx + 1 or ec_idx == sc_idx - 1):
+                    return True
+            else:
+                raise Exception("board.action_is_move : color value error")
+        else:
+            raise Exception("board.action_is_move : stone value error")
+        return False
+
+    def action_is_take(self, hit, stone, color):
+        (start, end) = commons.Hit.explode(hit, pair=True)
+        (sl_idx, sc_idx) = from_board_to_index(start[1], start[0])
+        (el_idx, ec_idx) = from_board_to_index(end[1], end[0])
+        
+        if stone == commons.Pawn:
+            if color == commons.Black:
+                if el_idx == sl_idx + 2 and (ec_idx == sc_idx + 2 or ec_idx == sc_idx - 2):
+                    return True
+            elif color == commons.White:
+                if el_idx == sl_idx - 2 and (ec_idx == sc_idx + 2 or ec_idx == sc_idx - 2):
+                    return True
+            else:
+                raise Exception("board.action_is_move : color value error")
+        elif stone == commons.Lady:
+            if color == commons.Black or color == commons.White:
+                if (el_idx == sl_idx - 2 or el_idx == sl_idx + 2) and (ec_idx == sc_idx + 2 or ec_idx == sc_idx - 2):
+                    return True
+            else:
+                raise Exception("board.action_is_move : color value error")
+        else:
+            raise Exception("board.action_is_move : stone value error")
+        return False

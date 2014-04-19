@@ -21,10 +21,9 @@ class Player:
         else:
             print("Player error: Bad init !")
 
-class AI(Player):
+class AI:
     """AI added to Player by composition"""
-    def __init__(self):
-        pass
-
+    def __init__(self, player=None):
+        self.player = player
     def think(self):
         return commons.Hit.Bad

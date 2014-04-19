@@ -24,14 +24,17 @@ class Referee:
                 # well formated -> check is legal
                 (s_c, s_l, e_c, e_l) = commons.Hit.explode(hit)
 
-                # Fill end Cell Infos :cell -> Fill and stone exist
-                self.board.board[s_l][s_c].fill()
-                self.board.board[e_l][e_c].stone.color = self.board.board[s_l][s_c].stone.color
-                self.board.board[e_l][e_c].stone.state = self.board.board[s_l][s_c].stone.state
-                self.board.board[e_l][e_c].stone.is_exist = self.board.board[s_l][s_c].stone.is_exist
-                # Clean start Cell Infos
-                self.board.board[s_l][s_c].clean()
-                return True
+                if self.board.action_is_move(hit, stone=self.board.board[s_l][s_c].stone.state, color=self.board.board[s_l][s_c].stone.color):
+                    self.board.board[s_l][s_c].fill()
+                    self.board.board[e_l][e_c].stone.color = self.board.board[s_l][s_c].stone.color
+                    self.board.board[e_l][e_c].stone.state = self.board.board[s_l][s_c].stone.state
+                    self.board.board[e_l][e_c].stone.is_exist = self.board.board[s_l][s_c].stone.is_exist
+                    self.board.board[s_l][s_c].clean()
+                    return True
+                elif self.board.action_is_take(hit, stone=self.board.board[s_l][s_c].stone.state, color=self.board.board[s_l][s_c].stone.color):
+                    pass
+                else:
+                    return False
             else:
                 return False
 
