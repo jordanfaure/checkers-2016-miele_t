@@ -21,7 +21,7 @@ enum PlayerType {Cpu, Human};
  * and a take.
  */
 
-enum MoveType{
+enum MoveType {
     InvalidMove = 0,
     isPromotion = 1 << 0,
     isTake = 1 << 1,

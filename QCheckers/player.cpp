@@ -76,7 +76,7 @@ void Player::humanThink(checkers::Move &move)
 }
 
 void Player::AiThink(checkers::Move &move, Board *rboard)
-{
+{/*
     Board *board(0);
     checkers::Move sim_move;
     int max_val = -1000;
@@ -97,5 +97,5 @@ void Player::AiThink(checkers::Move &move, Board *rboard)
 
         board->undoMove(sim_move);
     }
-    delete board;
+    delete board;*/
 }

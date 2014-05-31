@@ -4,8 +4,6 @@
 #include <QObject>
 
 #include "chechers.h"
-
-#include "referee.h"
 #include "board.h"
 #include "player.h"
 
@@ -24,7 +22,6 @@ public slots:
 
 private:
     Board *_board;
-    Referee *_referee;
     Player *_black;
     Player *_white;
 };

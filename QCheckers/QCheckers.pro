@@ -16,18 +16,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    referee.cpp \
     player.cpp \
     draughts.cpp \
     board.cpp
 
-win32 {
-    QMAKE_LFLAGS += /INCREMENTAL:NO
-}
-
 HEADERS += \
-    referee.h \
     player.h \
     draughts.h \
     board.h \
     chechers.h
+
+win32 {
+    QMAKE_LFLAGS += /INCREMENTAL:NO
+}

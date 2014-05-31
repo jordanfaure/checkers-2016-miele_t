@@ -33,6 +33,7 @@ Board::Board(QObject *parent) :
 {
     _blackStones = 0;
     _whiteStones = 0;
+    _player = checkers::White;
 
     for (int l = 0; l < 10; ++l)
     {
@@ -86,14 +87,6 @@ Board::Board(QObject *parent) :
     }
 }
 
-Board *Board::make_AIcopy()
-{
-    Board *board(0);
-
-    board = new Board(this);
-    return board;
-}
-
 bool Board::isGameOver() const
 {
     if (_blackStones <= 0 || _whiteStones <= 0)
@@ -133,10 +126,6 @@ void Board::update(checkers::Move &move)
             _board[move.taken.first][move.taken.second].clean();
         }
         _board[s_l][s_c].clean();
-    }
-    if (this->isGameOver())
-    {
-        emit this->gameIsOver();
     }
 }
 
@@ -182,7 +171,8 @@ void Board::checkMove(checkers::Move &move)
     int f_l = finishStone.pos.first;
     int f_c = finishStone.pos.second;
 
-    if (startStone.state == checkers::Empty
+    if (!move.valid
+            || startStone.state == checkers::Empty
             || startStone.color == checkers::NoColor
             || startStone.piece == checkers::NoPiece
             || move.color != startStone.color)
@@ -328,4 +318,17 @@ good:
     move.type = static_cast<checkers::MoveType>(flags);
     move.valid = true;
     return;
+}
+
+checkers::Color Board::currentPlayer() const
+{
+    return _player;
+}
+
+void Board::switchPlayer()
+{
+    /* NoColor case is not tested
+     */
+    _player = (_player == checkers::White ?
+                   checkers::Black : checkers::White);
 }
