@@ -13,6 +13,8 @@
 #define PYTHON_HUMAN_PLAYER_REGEX "^([a-jA-J]\d){2}$"
 #define HUMAN_PLAYER_REGEX "^([a-j]\\d){2}$"
 
+#define MINMAX_DEPTH 3
+
 class Player : public QObject
 {
     Q_OBJECT
@@ -27,7 +29,10 @@ signals:
 public slots:
     void think(checkers::Move&, Board *);
     void humanThink(checkers::Move&);
+
     void AiThink(checkers::Move&, Board *);
+    int min(Board *, int);
+    int max(Board *, int);
 
 private:
     checkers::Color _color;

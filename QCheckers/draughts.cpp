@@ -14,7 +14,7 @@ Draughts::Draughts(QObject *parent) :
     _black->setColor(checkers::Black);
     _white->setColor(checkers::White);
 
-    //_black->setMode(checkers::Cpu);
+    _black->setMode(checkers::Cpu);
 
     connect(this, SIGNAL(launch()), this, SLOT(play()));
     connect(this, SIGNAL(stop()), qApp, SLOT(quit()));
@@ -39,8 +39,7 @@ void Draughts::play()
             _board->checkMove(move);
         }
         while (!move.valid);
-        _board->update(move);
-        _board->switchPlayer();
+        _board->pushMove(move);
     }
     qcout << "GAME OVER" << endl;
     emit this->stop();

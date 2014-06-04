@@ -94,7 +94,7 @@ bool Board::isGameOver() const
     return false;
 }
 
-void Board::update(checkers::Move &move)
+void Board::pushMove(checkers::Move &move)
 {
     int s_l(move.start.first);
     int s_c(move.start.second);
@@ -123,10 +123,53 @@ void Board::update(checkers::Move &move)
                 _blackStones -= 1;
             else if (color == checkers::White)
                 _whiteStones -=1;
+            move.takenPiece = _board[move.taken.first][move.taken.second];
             _board[move.taken.first][move.taken.second].clean();
         }
         _board[s_l][s_c].clean();
     }
+    _moves.push_front(move);
+    this->switchPlayer();
+}
+
+void Board::popMove()
+{
+    if (_moves.empty())
+        return;
+    checkers::Move move = _moves.last();
+    int s_l(move.start.first);
+    int s_c(move.start.second);
+
+    int f_l(move.finish.first);
+    int f_c(move.finish.second);
+
+    if (!move.valid || move.type == checkers::InvalidMove)
+        return;
+    if (move.type & checkers::ValidMove)
+    {
+        _board[s_l][s_c].state = _board[f_l][f_c].state;
+        _board[s_l][s_c].color = _board[f_l][f_c].color;
+        _board[s_l][s_c].piece = _board[f_l][f_c].piece;
+        _board[s_l][s_c].repr = _board[f_l][f_c].repr;
+
+        if (move.type & checkers::isPromotion)
+        {
+            _board[s_l][s_c].piece = checkers::Pawn;
+            _board[s_l][s_c].setRepr();
+        }
+        if (move.type & checkers::isTake)
+        {
+            checkers::Color color = _board[move.taken.first][move.taken.second].color;
+            if (color == checkers::Black)
+                _blackStones += 1;
+            else if (color == checkers::White)
+                _whiteStones +=1;
+            _board[move.taken.first][move.taken.second] = move.takenPiece;
+        }
+        _board[f_l][f_c].clean();
+    }
+    _moves.pop_front();
+    this->switchPlayer();
 }
 
 void Board::display()
@@ -158,7 +201,6 @@ void Board::display()
 
 void Board::checkMove(checkers::Move &move)
 {
-    QTextStream qcout(stdout);
     checkers::Case startStone = _board[move.start.first][move.start.second];
     checkers::Case finishStone = _board[move.finish.first][move.finish.second];
     checkers::Position takenStone;
@@ -206,16 +248,6 @@ void Board::checkMove(checkers::Move &move)
                 move.taken.first = (takenStone.first < 0 ? startStone.pos.first - 1 : startStone.pos.first + 1);
                 move.taken.second = (takenStone.second < 0 ? startStone.pos.second - 1 : startStone.pos.second + 1);
 
-                qcout << "Black #isTaken ["
-                      << startStone.pos.first << '-'
-                      << startStone.pos.second << "] ["
-                      << finishStone.pos.first << ','
-                      << finishStone.pos.second << "] -> ["
-                      << takenStone.first << ","
-                      << takenStone.second << "] := ["
-                      << move.taken.first << ','
-                      << move.taken.second << "]"
-                      << endl;
                 checkers::Case takenCase = _board[move.taken.first][move.taken.second];
                 if (takenCase.state == checkers::Empty
                         || takenCase.color == startStone.color
@@ -249,16 +281,6 @@ void Board::checkMove(checkers::Move &move)
                 move.taken.first = (takenStone.first < 0 ? startStone.pos.first - 1 : startStone.pos.first + 1);
                 move.taken.second = (takenStone.second < 0 ? startStone.pos.second - 1 : startStone.pos.second + 1);
 
-                qcout << "White #isTaken ["
-                      << startStone.pos.first << '-'
-                      << startStone.pos.second << "] ["
-                      << finishStone.pos.first << ','
-                      << finishStone.pos.second << "] -> ["
-                      << takenStone.first << ","
-                      << takenStone.second << "] := ["
-                      << move.taken.first << ','
-                      << move.taken.second << "]"
-                      << endl;
                 checkers::Case takenCase = _board[move.taken.first][move.taken.second];
                 if (takenCase.state == checkers::Empty
                         || takenCase.color == startStone.color
@@ -331,4 +353,31 @@ void Board::switchPlayer()
      */
     _player = (_player == checkers::White ?
                    checkers::Black : checkers::White);
+}
+
+int Board::heuristic()
+{
+    checkers::Color player = this->currentPlayer();
+
+    if (this->isGameOver())
+    {
+        if (player == checkers::White)
+        {
+            int i = _whiteStones - _blackStones;
+            return (i < 0 ? -i : i);
+        }
+        else if (player == checkers::Black)
+        {
+            int i =  _blackStones - _whiteStones;
+            return (i < 0 ? -i : i);
+        }
+    }
+    return 1;
+}
+
+Board::MoveList Board::nextMoves()
+{
+    Board::MoveList moves;
+
+    return moves;
 }

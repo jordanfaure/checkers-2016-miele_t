@@ -28,43 +28,6 @@ enum MoveType {
     ValidMove = 1 << 2
 };
 
-struct Move {
-    Position start;
-    Position taken; // used only when MoveType isTake
-    Position finish;
-    Color color;
-    MoveType type;
-    bool valid;
-
-    Move()
-        : start(0, 0), taken(0, 0), finish(0, 0),
-          color(NoColor), type(InvalidMove),
-          valid(false)
-    {}
-
-    bool convert(char l, char c, Position &pos)
-    {
-        int line(0);
-        int column(0);
-
-        column = c - '0' - '0' - 1;
-        line = l - '0';
-        if (line < 0 || line >= 10
-                && column <0 || column >= 10)
-        {
-            pos.first  = -1;
-            pos.second = -1;
-            return false;
-        }
-        else
-        {
-            pos.first = line;
-            pos.second = column;
-            return true;
-        }
-    }
-};
-
 struct Case {
     Case() :
         state(Empty), color(NoColor), piece(NoPiece),
@@ -123,6 +86,46 @@ struct Case {
         }
     }
 };
+
+
+struct Move {
+    Position start;
+    Position taken; // used only when MoveType isTake
+    Case takenPiece;
+    Position finish;
+    Color color;
+    MoveType type;
+    bool valid;
+
+    Move()
+        : start(0, 0), taken(0, 0), finish(0, 0),
+          color(NoColor), type(InvalidMove),
+          valid(false)
+    {}
+
+    bool convert(char l, char c, Position &pos)
+    {
+        int line(0);
+        int column(0);
+
+        column = c - '0' - '0' - 1;
+        line = l - '0';
+        if (line < 0 || line >= 10
+                && column <0 || column >= 10)
+        {
+            pos.first  = -1;
+            pos.second = -1;
+            return false;
+        }
+        else
+        {
+            pos.first = line;
+            pos.second = column;
+            return true;
+        }
+    }
+};
+
 
 }
 

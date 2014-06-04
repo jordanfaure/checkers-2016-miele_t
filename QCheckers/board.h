@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QTextStream>
+#include <QLinkedList>
 
 #include "chechers.h"
 
@@ -11,21 +12,27 @@ class Board : public QObject
 {
     Q_OBJECT
 public:
+    typedef QLinkedList<checkers::Move> MoveList;
+
     explicit Board(QObject *parent = 0);
+
 // functions
     bool isGameOver() const;
-    int heuristic() const;
 
-signals:
+    int heuristic();
+    MoveList nextMoves();
 
-public slots:
-    void update(checkers::Move &);
+    void pushMove(checkers::Move &);
+    void popMove();
     void checkMove(checkers::Move &);
+
     void display();
+
     checkers::Color currentPlayer() const;
     void switchPlayer();
 
 private:
+    MoveList _moves;
     checkers::Case _board[10][10];
     int _blackStones;
     int _whiteStones;

@@ -75,27 +75,78 @@ void Player::humanThink(checkers::Move &move)
           << move.valid << endl;
 }
 
-void Player::AiThink(checkers::Move &move, Board *rboard)
-{/*
-    Board *board(0);
-    checkers::Move sim_move;
+void Player::AiThink(checkers::Move &best_move, Board *board)
+{
     int max_val = -1000;
     int val = 0;
 
-    board = rboard->make_AIcopy();
-    // min max here
-    while (board->nextMove(sim_move))
+    Board::MoveList moves = board->nextMoves();
+    Board::MoveList::iterator it;
+    for (it = moves.begin(); it != moves.end(); ++it)
     {
-        board->simulate(sim_move);
-        val = Min(board, DEPTH);
+        board->pushMove(*it);
+        val = this->min(board, MINMAX_DEPTH);
 
         if (val > max_val)
         {
             max_val = val;
-            move = sim_move;
+            best_move = *it;
+        }
+        board->popMove();
+    }
+}
+
+int Player::min(Board *board, int depth)
+{
+    int min_val = 1000;
+    int val = 0;
+
+    if (depth == 0 || board->isGameOver())
+    {
+        return board->heuristic();
+    }
+
+    Board::MoveList moves = board->nextMoves();
+    Board::MoveList::iterator it;
+    for (it = moves.begin(); it != moves.end(); ++it)
+    {
+        board->pushMove(*it);
+        val = this->max(board, depth - 1);
+
+        if (val < min_val)
+        {
+            min_val = val;
         }
 
-        board->undoMove(sim_move);
+        board->popMove();
     }
-    delete board;*/
+    return min_val;
+}
+
+int Player::max(Board *board, int depth)
+{
+    int max_val = -1000;
+    int val = 0;
+
+    if (depth == 0 || board->isGameOver())
+    {
+        return board->heuristic();
+    }
+
+    Board::MoveList moves = board->nextMoves();
+    Board::MoveList::iterator it;
+    for (it = moves.begin(); it != moves.end(); ++it)
+    {
+        board->pushMove(*it);
+
+        val = this->min(board, depth - 1);
+
+        if (val > max_val)
+        {
+            max_val = val;
+        }
+
+        board->popMove();
+    }
+    return max_val;
 }
