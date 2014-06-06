@@ -13,21 +13,6 @@ static const char *initialBoard[] =
     "w w w w w ",
 };
 
-/*
-static const char *initialBoard[] =
-{
-    " . . . . .",
-    ". . . . . ",
-    " . . . . .",
-    ". . . . . ",
-    " . . . . .",
-    ". . B . . ",
-    " . W . . .",
-    ". . . . . ",
-    " . . . . .",
-    ". . . . . ",
-};
-*/
 Board::Board(QObject *parent) :
     QObject(parent)
 {
@@ -378,6 +363,104 @@ int Board::heuristic()
 Board::MoveList Board::nextMoves()
 {
     Board::MoveList moves;
+    checkers::Color player = this->currentPlayer();
+    checkers::Move nil_move;
 
+    for (int l = 0; l < 10; ++l)
+    {
+        for (int c = 0; c < 0; ++c)
+        {
+            if (_board[l][c].state != checkers::Empty
+                    && _board[l][c].color != checkers::NoColor
+                    && _board[l][c].piece != checkers::NoPiece
+                    && _board[l][c].color == player)
+            {
+                int way = (player == checkers::White ? -1 : 1);
+                int d_way = 2 * way;
+                int promo = (player == checkers::White ? 9 : 0);
+
+                checkers::Position ul_1(l + way, c - 1);
+                checkers::Position ur_1(l + way, c + 1);
+
+                checkers::Position bl_1(l - way, c - 1);
+                checkers::Position br_1(l - way, c + 1);
+                // takes
+                checkers::Position ul_2(2 + d_way, c - 2);
+                checkers::Position ur_2(2 + d_way, c + 2);
+
+                checkers::Position bl_2(2 - d_way, c - 2);
+                checkers::Position br_2(2 - d_way, c + 2);
+
+                checkers::Position off[4];
+                checkers::Position off_take[4];
+
+                off[0] = ul_1;
+                off[1] = ur_1;
+                off[2] = bl_1;
+                off[3] = br_1;
+
+                off_take[0] = ul_2;
+                off_take[1] = ur_2;
+                off_take[2] = bl_2;
+                off_take[3] = br_2;
+
+                int most = (_board[l][c].piece == checkers::Lady ? 4 : 2);
+
+                // moves
+                for (int i = 0; i < most; ++i)
+                {
+                    checkers::Move move;
+                    int flags = 0;
+
+                    move.color = player;
+                    move.valid = true;
+                    // moves
+                    if (_board[off[i].first][off[i].second].state == checkers::Empty
+                            && _board[off[i].first][off[i].second].piece == checkers::NoPiece
+                            && _board[off[i].first][off[i].second].color == checkers::NoColor
+                            )
+                    {
+                        move.start = _board[l][c].pos;
+                        move.finish = _board[off[i].first][off[i].second].pos;
+                        flags |= checkers::ValidMove;
+                        if (off[i].first == promo)
+                            flags |= checkers::isPromotion;
+
+                        move.type = static_cast<checkers::MoveType>(flags);
+                        moves.push_back(move);
+                    }
+                }
+                // take
+                for (int i = 0; i < most; ++i)
+                {
+                    checkers::Move move;
+                    int flags = 0;
+
+                    move.color = player;
+                    move.valid = true;
+
+                    if (_board[off_take[i].first][off_take[i].second].state == checkers::Empty
+                            && _board[off_take[i].first][off_take[i].second].piece == checkers::NoPiece
+                            && _board[off_take[i].first][off_take[i].second].color == checkers::NoColor
+                            && _board[off[i].first][off[i].second].state != checkers::Empty
+                            && _board[off[i].first][off[i].second].piece != checkers::NoPiece
+                            && _board[off[i].first][off[i].second].color != player
+                            )
+                    {
+                        move.start = _board[l][c].pos;
+                        move.taken = _board[off[i].first][off[i].second].pos;
+                        move.finish = _board[off_take[i].first][off_take[i].second].pos;
+                        flags |= checkers::ValidMove;
+                    }
+                    flags |= checkers::isTake;
+                    if (off_take[i].first == promo)
+                        flags |= checkers::isPromotion;
+
+                    move.type = static_cast<checkers::MoveType>(flags);
+                    moves.push_back(move);
+                }
+            }
+        }
+    }
     return moves;
 }

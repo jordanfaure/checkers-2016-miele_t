@@ -91,7 +91,7 @@ struct Case {
 struct Move {
     Position start;
     Position taken; // used only when MoveType isTake
-    Case takenPiece;
+    Case takenPiece; // only used on update
     Position finish;
     Color color;
     MoveType type;
